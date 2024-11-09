@@ -96,7 +96,7 @@ nnoremap <Esc> :noh<CR>
 " Save file
 nnoremap <C-s> :w<CR>
 
-" Save file withouth auto-formatting
+" Save file without auto-formatting
 nnoremap <leader>sn :noautocmd w<CR>
 
 " Quit file
