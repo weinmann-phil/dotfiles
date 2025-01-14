@@ -32,6 +32,20 @@ function find_item {
 
 alias find=$(find_item)
 
+#################################################
+# Function to check the validity of an URL
+#
+# This function takes a string and checks if its
+# form is compatible with a valid URL.
+#
+# Args:
+#   URL: A string representing a digital address.
+# Returns:
+#   An integer represting the status code of the
+#   function.
+# Raises:
+#   None.
+#################################################
 function check_url_format {
   local URL=$1
 
@@ -42,13 +56,29 @@ function check_url_format {
   fi
 }
 
+#################################################
+# Function to look up an URL address 
+#
+# This function takes an URL and performs several
+# tests and initial static analyses with 
+# different toolings
+#
+# Args:
+#   URL: A string representing the URL address of
+#     an application
+# Returns:
+#   A file with many relevant network information
+# Raises:
+#   None.
+#################################################
 function look_up_url {
   local URL=$1
 
   LOOK_UP_ADDRESS=$(nslookup $URL)
   ADDRESS_COUNT=$(echo $LOOK_UP_ADDRESS | grep -ic address)
   if [[ $ADDRESS_COUNT == 2 ]]; then
-    echo "tbd"
+    IP=$(nslookup $URL | grep -oE '((1?[0-9]?[0-9|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])')
+    
   fi
 }
 
@@ -58,3 +88,31 @@ function tbd {
   check_url_format $URL
   
 }
+
+
+################################################
+# Function to generate a random password
+#
+# This function takes up a number as the length
+# of the output and generates a random string to
+# be used as a password.
+#
+# Args:
+#   LENGTH: An integer representing the length of
+#     the password.
+# Returns:
+#   A string representing the generated password.
+# Raises:
+#   None.
+#################################################
+function generate_random_password {
+  local LENGTH=$1
+
+  result=$(tr -dc '0-9a-zA-Z!£\$%^&*_\-=+~@:;#' < /dev/urandom | head -c $LENGTH)
+  echo $result
+}
+
+alias pass=$(generate_random_password)
+
+
+
