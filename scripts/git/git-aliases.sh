@@ -8,6 +8,8 @@ alias gd='git diff'
 alias gm='git merge'
 alias gc='git commit -v'
 alias gcm='git commit -m'
+alias gp='git pull'
+alias gr='git pull --rebase'
 
 source=~/.config/helper.sh
 
