@@ -6,4 +6,4 @@
 # Themes
 
 ## Powerline
-# source 
+source /usr/share/powerline/bindings/bash/powerline.sh
