@@ -13,15 +13,165 @@ alias gr='git pull --rebase'
 
 source=~/.config/helper.sh
 
-# Alias functions (for more complex aliases)
-function git_init {
-  local PROJECT_NAME="${1:=.}"
-  local BRANCH="${2:=main}"
+function get_base_gitignore {
+  local HEADER=$1
+  local GITIGNORE_BASE_URL=$2
 
+  curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Global/Linux.gitignore" -o .gitignore 
+  echo "" >> .gitignore
+  curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Global/macOS.gitignore" >> .gitignore
+  echo "" >> .gitignore
+  curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Global/Windows.gitignore" >> .gitignore
+  echo "" >> .gitignore
+  
+}
+
+#################################################
+# Create a base repository
+# 
+# This function creates a simple project structure
+# without any language specifications.
+#
+# Args:
+#   HEADER: A string representing the content type 
+#     of raw file date within GitHub.
+#   GITIGNORE_BASE_URL: A string representing the
+#     base URL for the GitHub API.
+#################################################
+function create_base_repo {
+  local HEADER=$1
+  local GITIGNORE_BASE_URL=$2
+
+  touch README.md
+  get_base_gitignore "${HEADER}" "${GITIGNORE_BASE_URL}"
+  mkdir -p docs/ imgs/ scripts/ src/
+}
+
+function create_language_specific_repo {
+  local HEADER=$1
+  local GITIGNORE_BASE_URL=$2
+  local LANGUAGE=$3
+  local PROJECT_NAME=$4
+
+  #touch README.md
+  #get_base_gitignore $HEADER $GITIGNORE_BASE_URL
+
+  case "$LANGUAGE" in
+    ada)
+      git init $PROJECT_NAME --initial-branch=main
+      cd $PROJECT_NAME
+      get_base_gitignore "${HEADER}" "${GITIGNORE_BASE_URL}"
+      touch README.md
+      mkdir -p docs/ src/Libraries src/Objects utils/ examples/
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Ada.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    c++ | cpp)
+      git init $PROJECT_NAME --initial-branch=main
+      cd $PROJECT_NAME
+      get_base_gitignore "${HEADER}" "${GITIGNORE_BASE_URL}"
+      touch README.md
+      mkdir -p docs/ include/ src/ tests/
+      touch src/main.cpp
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}C++.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    c)
+      git init $PROJECT_NAME --initial-branch=main
+      cd $PROJECT_NAME
+      get_base_gitignore "${HEADER}" "${GITIGNORE_BASE_URL}"
+      touch README.md
+      mkdir -p docs/ include/ src/ tests/
+      touch src/main.c
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}C.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    go | golang)
+      git init $PROJECT_NAME --initial-branch=main
+      cd $PROJECT_NAME
+      get_base_gitignore "${HEADER}" "${GITIGNORE_BASE_URL}"
+      touch README.md
+      mkdir -p docs/ cmd/ config/ _common/interfaces/ img/ internals/ provider/
+      touch main.go
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Go.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    haskell)
+      git init $PROJECT_NAME --initial-branch=main
+      cd $PROJECT_NAME
+      get_base_gitignore "${HEADER}" "${GITIGNORE_BASE_URL}"
+      touch README.md
+      mkdir -p src/App src/cbits docs/examples/ docs/dev/ utils/ dist/build/ dist/docs/ dist/resources/ _DARCS/
+      touch src/Main.lhs INSTALL.md app.cabal Setup.hs
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Haskell.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    java)
+      local JAVA_VERSION=23      # Possible versions are: 23, 21, and 17
+      local TYPE='maven-project' # Possible values are: Gradle and Maven
+      local BOOT_VERSION='3.4.2' # Versions vary significantly! Please check the actual or preferred versions
+      local BOOT_OPTIONS='?type=${TYPE}&language=java&bootVersion=${BOOT_VERSION}&baseDir=${PROJECT_NAME}&groupId=com.weinmann-phil&artifactId=${PROJECT_NAME}&description=${PROJECT_NAME}&packageName=com.weinmann-phil.${PROJECT_NAME}&packaging=jar&javaVersion=$JAVA_VERSION'
+      curl "https://start.spring.io/starter.zip${BOOT_OPTIONS}" -o "${PROJECT_NAME}.zip"
+      unzip -Z "${PROJECT_NAME}.zip" "${PROJECT_NAME}"
+      cd $PROJECT_NAME
+      touch README.md
+      mkdir docs
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Java.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    lua)
+      git init $PROJECT_NAME --initial-branch=main
+      cd $PROJECT_NAME
+      get_base_gitignore "${HEADER}" "${GITIGNORE_BASE_URL}"
+      touch README.md
+      mkdir -p docs/ src/ examples/
+      touch src/init.lua
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Lua.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    py | python)i
+      python3 -m venv $PROJECT_NAME
+      cd $PROJECT_NAME
+      git init . --initial-branch=main
+      mkdir docs/ src/ test/
+      touch pyproject.toml requirements.txt
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Python.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    rust)
+      cargo new --vcs git $PROJECT_NAME
+      cd $PROJECT_NAME
+      touch README.md
+      mkdir docs/
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+    tf | terraform | tofu)
+      git init $PROJECT_NAME --initial-branch=main
+      cd $PROJECT_NAME
+      get_base_gitignore "${HEADER}" "${GITIGNORE_BASE_URL}"
+      touch README.md
+      mkdir -p app/stack/ app/modules/ config/ environments/
+      curl -H "${HEADER}" "${GITIGNORE_BASE_URL}Terraform.gitignore" >> .gitignore
+      echo "" >> .gitignore
+      ;;
+  esac
+}
+
+# Alias functions (for more complex aliases)
+function create_git_repo {
+  local PROJECT_NAME="${1:=.}"
+  local LANGUAGE=$2
+  local BRANCH="${3:=main}"
+
+  if [ -z $PROJECT_NAME ]; then
+    echo "Empty project name. Please provide a name for your project!"
+    read PROJECT_NAME
+  fi
   git init $PROJECT_NAME --initial-branch=$BRANCH
 }
 
-alias gi=$(git_init)
+alias gi=create_git_repo
 
 function format_branch_names {
   local BRANCH=$1
@@ -51,4 +201,4 @@ function git_checkout_create {
   git checkout -B $BRANCH_NAME
 }
 
-alias gco=$(git_checkout_create)
+alias gco=git_checkout_create
