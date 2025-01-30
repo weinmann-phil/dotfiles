@@ -1,19 +1,26 @@
-#!/bin/bash
-#
 # Aliases for bash snippets
-
 alias ll='ls -alF'
 alias fh='history | grep -i'
 alias up='sudo apt update'
 alias ug='sudo apt update && sudo apt upgrade -y'
 
+#################################################
+# Convert Base64 String to regular String
+#
+# This function takes a base64 encoded string and
+# prints out the decoded string.
+#
+# Args:
+#   BASE64: A string representing an encoded 
+#     string encoded as base64.
+#################################################
 function convert_base64_to_string {
   local BASE64=$1
 
-  echo $BASE64 | base64 --decode
+  echo $BASE64 | base64 --decode; echo ""
 }
 
-alias b2str=$(convert_base64_to_string)
+alias b2str=convert_base64_to_string
 
 function convert_string_to_base64 {
   local STRING=$1
@@ -21,7 +28,7 @@ function convert_string_to_base64 {
   echo -n $STRING | base64
 }
 
-alias str2b=$(convert_string_to_base64)
+alias str2b=convert_string_to_base64
 
 function find_item {
   local BASE_NODE=$1
@@ -30,7 +37,7 @@ function find_item {
   find $BASE_NODE -name $TARGET
 }
 
-alias find=$(find_item)
+alias find=find_item
 
 #################################################
 # Function to check the validity of an URL
@@ -112,7 +119,7 @@ function generate_random_password {
   echo $result
 }
 
-alias pass=$(generate_random_password)
+alias pass=generate_random_password
 
 
 

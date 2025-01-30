@@ -47,6 +47,22 @@ function create_base_repo {
   mkdir -p docs/ imgs/ scripts/ src/
 }
 
+#################################################
+# Create a language specific repository
+#
+# This function creates a repository following
+# the language settings for a set of given 
+# languages.
+#
+# Args:
+#   HEADER: A string representing the content type
+#     of raw file date within GitHub
+#   GITIGNORE_BASE_URL: A string representing the
+#     base URL for the GitHub API
+#   LANGUAGE: A string representing the language
+#   PROJECT_NAME: A string representing the name
+#     of the project
+#################################################
 function create_language_specific_repo {
   local HEADER=$1
   local GITIGNORE_BASE_URL=$2
@@ -163,10 +179,16 @@ function create_git_repo {
   local PROJECT_NAME="${1:=.}"
   local LANGUAGE=$2
   local BRANCH="${3:=main}"
+  local HEADER='Accept: application/vnd.github.v3.raw'
+  local GITIGNORE_BASE_URL='https://api.github.com/repos/github/gitignore/contents/'
 
-  if [ -z $PROJECT_NAME ]; then
-    echo "Empty project name. Please provide a name for your project!"
-    read PROJECT_NAME
+  if [ "${PROJECT_NAME}" == "." ]; then
+    git init . --initial-branch=main
+  elif [ -z "${LANGUAGE}" ]; then
+    git init "${PROJECT_NAME}" --initial-branch=main
+    create_base_repo "${HEADER}" "${GITIGNORE_BASE_URL}"
+  else
+    create_language_specific_repo "${HEADER}" "${GITIGNORE_BASE_URL}" "${LANGUAGE}" "${PROJECT_NAME}"
   fi
   git init $PROJECT_NAME --initial-branch=$BRANCH
 }
