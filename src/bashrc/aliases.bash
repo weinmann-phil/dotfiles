@@ -1,3 +1,7 @@
+# PERSONAL ALIASES 
+alias me='cd ~/git/weinmann-phil/'
+# alias company='cd ~/git/company-name/<repo>'
+
 # ALIAS CONFIGURATIONS
 source ~/.config/bash/utils.sh
 source ~/.config/bash/helper.sh

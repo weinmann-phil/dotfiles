@@ -1,19 +1,16 @@
-#!/bin/zsh 
-alias ll='ls -alF'
-alias me='cd ~/git/weinmann-phil'
+# PERSONAL ALIASES
+alias me='cd ~/git/weinmann-phil/'
 
-## DOTFILES
-# BASH
-set source ~/.config/bash/utils.sh
-set source ~/.config/git/git-aliases.sh
+# ALIAS CONFIGURATIONS
+source ~/.config/bash/utils.sh
+source ~/.config/bash/helper.sh
+source ~/.config/git/git-aliases.sh
+source ~/.config/kubernetes/kubectl-aliases.sh
 
-# Powerline configuration
-#export PATH="$PATH:"
-
-if [ -f "/usr/share/powerline/bindings/bash/powerline.sh" ] 
-then
+# POWERLINE CONFIGURATION
+if [ -f /usr/share/powerline/bindings/zsh/powerline.zsh ]; then
   powerline-daemon -q
-  set POWERLINE_BASH_CONTINUATION 1
-  set POWERLINE_BASH_SELECT 1
-  source /usr/share/powerline/bindings/bash/powerline.sh
-end
+  POWERLINE_BASH_CONTINUATION=1
+  POWERLINE_BASH_SELECT=1
+  source /usr/share/powerline/bindings/zsh/powerline.zsh
+fi
