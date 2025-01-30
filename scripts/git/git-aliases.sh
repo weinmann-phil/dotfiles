@@ -9,9 +9,11 @@ alias gm='git merge'
 alias gc='git commit -v'
 alias gcm='git commit -m'
 alias gp='git pull'
-alias gr='git pull --rebase'
+alias gro='git remote add origin'
+alias grb='git pull --rebase'
+alias gpo='git push origin HEAD'
 
-source=~/.config/helper.sh
+source=~/.config/bash/helper.sh
 
 function get_base_gitignore {
   local HEADER=$1
