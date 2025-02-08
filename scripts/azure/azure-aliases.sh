@@ -20,7 +20,6 @@ function log_to_azure {
 
 alias azsub=log_to_azure
 
-
 function get_aks_cluster {
   local CLUSTERS=$(az aks list --query "[].{name:name,rg:resourceGroup}" -o json)
   local COUNT=$(echo $CLUSTERS | jq '. | length')
@@ -80,3 +79,31 @@ function upgrade_kubernetes_version {
 }
 
 alias azkU=upgrade_kubernetes_version
+
+function scale_aks_nodepool {
+  local NODEPOOL_NAME=$1
+  local CLUSTER=$(kubectl config current-context)
+  local RG=$(az aks list --query "[?name == \`$CLUSTER\`].resourceGroup" -o tsv) 
+  local NODEPOOL=$(az aks nodepool show --cluster-name $CLUSTER -g $RG -n $NODEPOOL_NAME --query "{autoscale:enableAutoScaling,min:minCount,max:maxCount,count:count}" -o json)
+  local AUTOSCALER=$(echo $NODEPOOL | jq '.autoscale')
+  local MIN=$(echo $NODEPOOL | jq '.min')
+  local MAX=$(echo $NODEPOOL | jq '.max')
+  local COUNT=$(echo $NODEPOOL | jq '.count')
+  echo "Current node count is: $COUNT"
+  if [ AUTOSCALER == true ]; then
+    echo "This node is set up to have at most $MAX nodes"
+    echo "Which should be the new maximum value?"
+    read NMAX
+    echo "This node is set up to have at least $MIN nodes"
+    echo "Which should be the new minimum value?"
+    read NMIN
+    az aks nodepool update --update-cluster-autoscaler --min-count $NMIN --max-count $NMAX -g $RG -n $NODEPOOL_NAME --cluster-name $CLUSTER
+  else
+    echo "Which should be the new node count?"
+    read NCOUNT
+    az aks nodepool scale --cluster-name $CLUSTER -g $RG -n $NODEPOOL_NAME -c $NCOUNT
+  fi
+}
+
+alias azunp=scale_aks_nodepool
+

@@ -5,6 +5,14 @@ complete -o default -F __start_kubectl k
 alias k='kubectl'
 alias kns='kubectl get namespaces'
 
+function get_nodes_overview {
+  kubectl get nodes
+  kubectl get pods -A \
+    -o jsonpath='{range .items[?(@.spec.nodeName)]}{.spec.nodeName}{"\n"}{end}' | sort | uniq -c | awk 'BEGIN {print "NAME\t\t\t\t\tCOUNT"} {print $2 "\t" $1}'
+}
+
+alias kN=get_nodes_overview
+
 function get_context_information {
   echo "Current context: "
   echo "    $(kubectl config current-context)"
