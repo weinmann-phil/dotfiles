@@ -7,6 +7,7 @@ source ~/.config/bash/utils.sh
 source ~/.config/bash/helper.sh
 source ~/.config/git/git-aliases.sh
 source ~/.config/kubernetes/kubectl-aliases.sh
+source ~/.config/azure/azure-aliases.sh
 
 # Powerline configuration
 if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then

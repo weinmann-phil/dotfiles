@@ -13,6 +13,7 @@ source ~/.config/bash/utils.sh
 source ~/.config/bash/helper.sh
 source ~/.config/git/git-aliases.sh
 source ~/.config/kubernetes/kubectl-aliases.sh
+source ~/.config/azure/azure-aliases.sh
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
