@@ -57,7 +57,7 @@ function update_aks_clusters {
   for i in $(seq 1 ${COUNT}); do
     local NAME=$(echo "$CLUSTERS" | jq -r '.['$i-1'].name')
     local RG=$(echo "$CLUSTERS" | jq -r '.['$i-1'].rg')
-    az aks update -n $NAME -g $RG
+    az aks update -n $NAME -g $RG --no-wait
   done
 }
 
