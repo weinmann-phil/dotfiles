@@ -16,3 +16,6 @@ if [ -f /usr/share/powerline/bindings/bash/powerline.sh ]; then
   POWERLINE_BASH_SELECT=1
   source /usr/share/powerline/bindings/bash/powerline.sh
 fi
+
+# Export important paths and variables
+export JAVA_HOME=/usr/bin/java
