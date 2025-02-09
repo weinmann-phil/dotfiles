@@ -16,13 +16,13 @@ source ~/.config/kubernetes/kubectl-aliases.sh
 source ~/.config/azure/azure-aliases.sh
 
 # If you come from bash you might have to change your $PATH.
-export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
+export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$JAVA_HOME/bin:$PATH
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
 # Path to Java installation
-export JAVA_HOME=/usr/bin/java
+export JAVA_HOME=/usr/lib/jvm/default-java
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time Oh My Zsh is loaded, in which case,
