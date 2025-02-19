@@ -17,6 +17,7 @@ source ~/.config/azure/azure-aliases.sh
 
 # If you come from bash you might have to change your $PATH.
 export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$JAVA_HOME/bin:$PATH
+export PATH=$PATH:/usr/local/go/bin
 
 # Path to your Oh My Zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
