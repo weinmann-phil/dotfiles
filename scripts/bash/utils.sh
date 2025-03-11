@@ -1,8 +1,13 @@
 # Aliases for bash snippets
 alias ll='ls -alF'
 alias fh='history | grep -i'
-alias up='sudo apt update'
-alias ug='sudo apt update && sudo apt upgrade -y'
+
+if [[ $(uname -s) -eq 'Linux' ]]; then
+  alias up='sudo apt update'
+  alias ug='sudo apt update && sudo apt upgrade -y'
+elif [[ $(uname -s) -eq 'Darwin' ]]; then
+  alias up='softwareupdate -l'
+fi
 
 #################################################
 # Convert Base64 String to regular String
@@ -84,8 +89,7 @@ function look_up_url {
   LOOK_UP_ADDRESS=$(nslookup $URL)
   ADDRESS_COUNT=$(echo $LOOK_UP_ADDRESS | grep -ic address)
   if [[ $ADDRESS_COUNT == 2 ]]; then
-    IP=$(nslookup $URL | grep -oE '((1?[0-9]?[0-9|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])')
-    
+    IP=$(nslookup $URL | grep -oE '((1?[0-9]?[0-9|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])')   
   fi
 }
 

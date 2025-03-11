@@ -3,7 +3,8 @@ complete -o default -F __start_kubectl k
 
 # Kubernetes Aliases
 alias k='kubectl'
-alias kns='kubectl get namespaces'
+alias knsg='kubectl get namespaces'
+alias kcrd='kubectl get customresourcedefinition'
 
 function get_nodes_overview {
   kubectl get nodes
@@ -44,6 +45,64 @@ function define_kubernetes_namespace {
 }
 
 alias ksn=define_kubernetes_namespace
+
+function get_kubernetes_pods {
+  local NAMESPACE=$1
+  local NAME=$2
+
+  if [[ -z "$NAMESPACE" ]]; then
+    kubectl get pods -A 
+  elif [[ -z "$NAME" ]]; then
+    kubectl get pods -n $NAMESPACE
+  else
+    kubectl get pods -n $NAMESPACE | grep -i $NAME
+  fi
+}
+
+function get_kubernetes_deployment {
+  local NAMESPACE=$1
+  local NAME=$2
+
+  if [[ -z "$NAMESPACE" ]]; then
+    kubectl get deployment -A
+  elif [[ -z "$NAME" ]]; then
+    kubectl get deployment -n $NAMESPACE
+  else
+    kubectl get deployment -n $NAMESPACE | grep -i $NAME
+  fi
+}
+
+function get_stateful_sets {
+  local NAMESPACE=$1
+  local NAME=$2
+
+  if [[ -z "$NAMESPACE" ]]; then
+    kubectl get sts -A
+  elif [[ -z "$NAME" ]]; then
+    kubectl get sts -n $NAMESPACE
+  else
+    kubectl get sts -n $NAMESPACE | grep -i $NAME
+  fi
+}
+
+function get_kubernetes_services {
+  local NAMESPACE
+  local NAME
+
+  if [[ -z "$NAMESPACE" ]]; then
+    kubectl get service -A
+  elif [[ -z "$NAME" ]]; then
+    kubectl get service -n $NAMESPACE
+  else
+    kubectl get service -n $NAMESPACE | grep -i $NAME
+  fi
+}
+
+alias kpog=get_kubernetes_pods
+alias kdplg=get_kubernetes_deployment
+alias kstsg=get_stateful_sets
+alias ksvcg=get_kubernetes_services
+
 
 function get_pods_within_namespace {
   local NAME=$1
