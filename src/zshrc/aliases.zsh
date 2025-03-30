@@ -130,6 +130,7 @@ plugins=(
   zsh-interactive-cd
   zsh-navigation-tools
   zsh-autosuggestions
+  zsh-history-substring-search
   zsh-syntax-highlighting
 )
 
